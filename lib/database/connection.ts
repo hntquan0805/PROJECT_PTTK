@@ -6,6 +6,7 @@ const config = {
   password: process.env.DB_PASSWORD || "password",
   server: process.env.DB_SERVER || "localhost",
   database: process.env.DB_NAME || "BillManagement",
+  port: parseInt(process.env.DB_PORT || '1433'),
   options: {
     encrypt: true,
     trustServerCertificate: true,
