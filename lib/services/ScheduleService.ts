@@ -1,9 +1,7 @@
 import { ScheduleRepository } from "./../repositories/ScheduleRepository";
 import { RegistrationInfoForm } from "@/features/registration/schemas";
-import { DatabaseConnection } from "../database/connection"; // chỉnh lại path nếu khác
 import ScheduleOption from "../models/ScheduleOption"; // nơi bạn định nghĩa interface
-import sql from "mssql";
-import { v4 as uuidv4 } from "uuid";
+
 export class ScheduleService {
   private ScheduleRepository: ScheduleRepository;
 

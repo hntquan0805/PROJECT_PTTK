@@ -56,6 +56,7 @@ export class ScheduleRepository {
       await transaction.begin();
       // --- 1. Insert KhachHang ---
       const khRequest = new sql.Request(transaction);
+      khRequest.input("khachHangId", sql.VarChar, uuidv4());
       khRequest.input("hoTen", sql.NVarChar, info.registrantName);
       khRequest.input("email", sql.NVarChar, info.registrantEmail || null);
       khRequest.input("soDienThoai", sql.VarChar, info.registrantPhone);
@@ -65,13 +66,13 @@ export class ScheduleRepository {
         info.customerType === "individual" ? "Tự do" : "Đơn vị"
       );
       khRequest.input("diaChi", sql.NVarChar, "");
-
+      console.log("CHECK@");
       const khachHangResult = await khRequest.query(`
-          INSERT INTO KhachHang (hoTen, email, soDienThoai, loaiKhachHang, diaChi)
+          INSERT INTO KhachHang (khachHangId, hoTen, email, soDienThoai, loaiKhachHang, diaChi)
           OUTPUT INSERTED.khachHangId
-          VALUES (@hoTen, @email, @soDienThoai, @loaiKhachHang, @diaChi)
+          VALUES (@khachHangId, @hoTen, @email, @soDienThoai, @loaiKhachHang, @diaChi)
         `);
-
+      console.log("CHECK@@");
       const khachHangId = khachHangResult.recordset[0].khachHangId;
 
       // --- 2. Insert ThiSinh ---
@@ -81,7 +82,7 @@ export class ScheduleRepository {
       tsRequest.input("hoTen", sql.NVarChar, info.examineeName);
       tsRequest.input("cccd", sql.VarChar, info.examineeId);
       tsRequest.input("ngaySinh", sql.DateTime, null); // bạn có thể bổ sung sau
-      tsRequest.input("khachHangId", sql.Int, khachHangId);
+      tsRequest.input("khachHangId", sql.VarChar, khachHangId);
       const thiSinhResult = await tsRequest.query(`
           INSERT INTO ThiSinh (thiSinhId, hoTen, ngaySinh, cccd, khachHangId)
           OUTPUT INSERTED.thiSinhId
@@ -106,7 +107,7 @@ export class ScheduleRepository {
         info.selectedSchedules[0]?.type === "it" ? "Tin học" : "Tiếng Anh"
       );
       pdRequest.input("nhanVienId", sql.Int, null);
-      pdRequest.input("khachHangId", sql.Int, khachHangId);
+      pdRequest.input("khachHangId", sql.VarChar, khachHangId);
 
       const phieuResult = await pdRequest.query(`
           INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, ghiChu, loaiChungChi, nhanVienId, khachHangId)
