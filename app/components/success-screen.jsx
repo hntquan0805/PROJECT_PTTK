@@ -27,8 +27,8 @@ export default function SuccessScreen({ bill, onComplete, onResendEmail }) {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-gray-600">Mã phiếu thanh toán:</span>
-              <span className="font-medium">INV{bill.id}</span>
+              <span className="text-gray-600">Mã phiếu đăng ký:</span>
+              <span className="font-medium">{bill.id}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Khách hàng:</span>
@@ -65,7 +65,7 @@ export default function SuccessScreen({ bill, onComplete, onResendEmail }) {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Đính kèm:</span>
-              <span className="font-medium">Hóa đơn INV{bill.id}.pdf, Thông tin thanh toán.pdf</span>
+              <span className="font-medium">Phiếu thanh toán {bill.id}.pdf, Thông tin thanh toán.pdf</span>
             </div>
           </CardContent>
         </Card>

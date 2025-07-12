@@ -20,7 +20,7 @@ export default function BillManagement() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedPhieuDangKy, setSelectedPhieuDangKy] = useState(null)
   const [customerTypeFilter, setCustomerTypeFilter] = useState("all")
-  const [formType, setFormType] = useState("organization") // "organization" hoặc "individual"
+  const [formType, setFormType] = useState("organization")
 
   useEffect(() => {
     fetchData()
@@ -32,7 +32,7 @@ export default function BillManagement() {
       setError(null)
 
       // Fetch pending PhieuDangKy (chưa thanh toán)
-      const phieuDangKyResponse = await fetch("/api/thanh-toan")
+      const phieuDangKyResponse = await fetch("/api/phieu-dang-ky")
       if (phieuDangKyResponse.ok) {
         const phieuDangKyData = await phieuDangKyResponse.json()
         setPhieuDangKys(Array.isArray(phieuDangKyData) ? phieuDangKyData : [])
@@ -70,12 +70,13 @@ export default function BillManagement() {
       dueDate: phieuDangKy.thoiGianMongMuon ? new Date(phieuDangKy.thoiGianMongMuon).toLocaleDateString("vi-VN") : "",
       paymentDeadline: paymentDeadlineDate.toLocaleDateString("vi-VN"),
       originalAmount: phieuDangKy.price * phieuDangKy.soLuongThiSinh || 0,
-      discount: 0,
+      discount: phieuDangKy.giamGia || 0,
       totalAmount: phieuDangKy.price * phieuDangKy.soLuongThiSinh || 0,
       paymentMethod: "Chuyển khoản",
       paymentDate: "",
       notes: phieuDangKy.ghiChu || "",
-      status: "pending",
+      status: "pending_billing",
+      soLuongThiSinh: phieuDangKy.soLuongThiSinh || 0,
     }
     setSelectedPhieuDangKy(billDisplayData)
     
@@ -201,7 +202,7 @@ export default function BillManagement() {
       </div>
 
         <Tabs defaultValue="pending" className="w-full">
-          <TabsList className="flex w-full justify-between mb-4">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="pending">Chờ thanh toán ({filteredPhieuDangKys.length})</TabsTrigger>
             <TabsTrigger value="history">Lịch sử thanh toán ({filteredPaidInvoices.length})</TabsTrigger>
           </TabsList>

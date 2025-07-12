@@ -20,8 +20,7 @@ export class PhieuDangKyRepository {
           kh.hoTen as customerName,
           kh.email,
           kh.soDienThoai as phone,
-          kh.loaiKhachHang as customerType,
-          lkt.tenKiemTra as certificate,
+          kh.loaiKhachHang,
           lkt.giaHienTai as price
         FROM PhieuDangKy pdk
         INNER JOIN KhachHang kh ON pdk.khachHangId = kh.khachHangId
@@ -55,8 +54,7 @@ export class PhieuDangKyRepository {
           kh.hoTen as customerName,
           kh.email,
           kh.soDienThoai as phone,
-          kh.loaiKhachHang as customerType,
-          lkt.tenKiemTra as certificate,
+          kh.loaiKhachHang,
           lkt.giaHienTai as price
         FROM PhieuDangKy pdk
         INNER JOIN KhachHang kh ON pdk.khachHangId = kh.khachHangId
@@ -91,10 +89,8 @@ export class PhieuDangKyRepository {
           kh.hoTen as customerName,
           kh.email,
           kh.soDienThoai as phone,
-          kh.loaiKhachHang as customerType,
-          lkt.tenKiemTra as certificate,
+          kh.loaiKhachHang,
           lkt.giaHienTai as price
-        FROM PhieuDangKy pdk
         INNER JOIN KhachHang kh ON pdk.khachHangId = kh.khachHangId
         INNER JOIN LoaiKiemTra lkt ON pdk.loaiKiemTraId = lkt.loaiKiemTraId
         WHERE pdk.phieuDangKyId = @id

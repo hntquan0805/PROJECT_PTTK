@@ -134,29 +134,7 @@ CREATE TABLE PhieuGiaHan (
     nhanVienId NVARCHAR(50) FOREIGN KEY REFERENCES NhanVien(nhanVienId)
 );
 
--- --Bảng: HoaDon
--- CREATE TABLE HoaDon (
---     hoaDonId NVARCHAR(50) PRIMARY KEY IDENTITY(1,1),
---     soTienBanDau DECIMAL(10,2),
---     hanThanhToan DATETIME,
---     soTienGiamGia DECIMAL(10,2),
---     tongSoTien DECIMAL(10,2),
---     trangThai NVARCHAR(50),
---     troGiaId NVARCHAR(50) FOREIGN KEY REFERENCES TroGia(troGiaId),
---     nhanVienId NVARCHAR(50) FOREIGN KEY REFERENCES NhanVien(nhanVienId),
---     phieuDangKyId NVARCHAR(50) NULL  FOREIGN KEY REFERENCES PhieuDangKy(phieuDangKyId),
---     phieuGiaHanId NVARCHAR(50) NULL  FOREIGN KEY REFERENCES PhieuGiaHan(phieuGiaHanId)
---  );
--- -- bảng ThanhToan
--- CREATE TABLE ThanhToan (
---     thanhToanId NVARCHAR(50) PRIMARY KEY IDENTITY(1,1),
---     ngayTao DATETIME DEFAULT GETDATE(),
---     ngayThanhToan DATETIME,
---     hinhThucThanhToan NVARCHAR(100),
---     trangThai NVARCHAR(50) NOT NULL ,
---     HoaDon	NVARCHAR(50) FOREIGN KEY REFERENCES HoaDon(thanhToanId)
---     );
---Bảng: ThanhToan
+
 CREATE TABLE ThanhToan (
      thanhToanId NVARCHAR(50) PRIMARY KEY,
      soTienBanDau DECIMAL(10,2),
@@ -165,9 +143,9 @@ CREATE TABLE ThanhToan (
      tongSoTien DECIMAL(10,2),
      loaiThanhToan NVARCHAR(50),
      trangThai NVARCHAR(50),
-     troGiaId NVARCHAR(50) FOREIGN KEY REFERENCES TroGia(troGiaId),
-     nhanVienId NVARCHAR(50) FOREIGN KEY REFERENCES NhanVien(nhanVienId),
-     phieuDangKyId NVARCHAR(50) NULL  FOREIGN KEY REFERENCES PhieuDangKy(phieuDangKyId),
+     troGiaId NVARCHAR(50) NULL FOREIGN KEY REFERENCES TroGia(troGiaId),
+     nhanVienId NVARCHAR(50) NULL FOREIGN KEY REFERENCES NhanVien(nhanVienId),
+     phieuDangKyId NVARCHAR(50) FOREIGN KEY REFERENCES PhieuDangKy(phieuDangKyId),
      phieuGiaHanId NVARCHAR(50) NULL  FOREIGN KEY REFERENCES PhieuGiaHan(phieuGiaHanId)
  );
 -- bảng hoá đơn 

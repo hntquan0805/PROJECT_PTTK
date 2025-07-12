@@ -1,12 +1,12 @@
 // API Route for PhieuDangKy - Updated to get pending registrations
 import { NextResponse } from "next/server"
-import { BillService } from "@/lib/services/bill.service"
+import { PhieuTTService } from "@/lib/services/phieu-thanh-toan.service"
 
-const billService = new BillService()
+const phieuTTService = new PhieuTTService()
 
 export async function GET() {
   try {
-    const phieuDangKys = await billService.getPendingPhieuDangKy()
+    const phieuDangKys = await phieuTTService.getPendingPhieuDangKy()
     return NextResponse.json(phieuDangKys)
   } catch (error) {
     console.error("API error:", error)

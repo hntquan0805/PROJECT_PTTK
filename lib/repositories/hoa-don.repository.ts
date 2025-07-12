@@ -1,6 +1,6 @@
 // Data Access Layer - Updated HoaDon Repository
 import { DatabaseConnection } from "../database/connection"
-import type { HoaDon, CreateHoaDonRequest, HoaDonWithDetails } from "../models/thanh-toan.model"
+import type { HoaDon, CreateHoaDonRequest, HoaDonWithDetails } from "../models/phieu-thanh-toan.model"
 
 export class HoaDonRepository {
   private db: DatabaseConnection
