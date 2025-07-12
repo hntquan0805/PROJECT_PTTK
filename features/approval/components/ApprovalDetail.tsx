@@ -8,12 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, AlertCircle, User, Calendar } from "lucide-react";
 import { ApprovalRequest } from "./ApprovalList";
-
-interface Schedule {
-  date: string;
-  time: string;
-  slots: number;
-}
+import ScheduleOption from "@/lib/models/ScheduleOption";
+import { useState } from "react";
 
 interface Notification {
   type: string;
@@ -22,7 +18,7 @@ interface Notification {
 
 interface ApprovalDetailProps {
   request: ApprovalRequest;
-  schedules: Schedule[];
+  schedules: ScheduleOption[];
   onDecision: () => void;
   notification: Notification;
   isProcessing: boolean;
@@ -47,6 +43,7 @@ export default function ApprovalDetail({
   selectedSchedule,
   setSelectedSchedule,
 }: ApprovalDetailProps) {
+  // console.log("schedules in ApprovalDetail", schedules);
   if (!request) return null;
 
   const getExtensionCountBadge = (count: number) => {
@@ -58,6 +55,8 @@ export default function ApprovalDetail({
       return <Badge variant="outline">Lần 1 ({count}/2)</Badge>;
     }
   };
+
+  const [selectedDate, setSelectedDate] = useState("");
 
   return (
     <div className="space-y-6">
@@ -108,11 +107,11 @@ export default function ApprovalDetail({
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Ngày thi hiện tại</Label>
-              <p className="font-medium">{request.currentDate}</p>
+              <p className="font-medium">{request.currentDate ? request.currentDate.slice(0, 10) : ""}</p>
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Ngày thi mong muốn</Label>
-              <p className="font-medium">{request.requestedDate}</p>
+              <p className="font-medium">{request.requestedDate ? request.requestedDate.slice(0, 10) : ""}</p>
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Lý do gia hạn</Label>
@@ -129,7 +128,7 @@ export default function ApprovalDetail({
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Giấy tờ minh chứng</Label>
               <div className="space-y-1">
-                {request.documents.map((doc, index) => (
+                {(Array.isArray(request.documents) ? request.documents : []).map((doc, index) => (
                   <Badge key={index} variant="outline" className="mr-1">
                     {doc}
                   </Badge>
@@ -137,6 +136,12 @@ export default function ApprovalDetail({
               </div>
             </div>
           </div>
+          {request.status === "Đã từ chối" && request.lyDoTuChoi && (
+            <div className="mt-2">
+              <Label className="text-sm font-medium text-red-600">Lý do từ chối</Label>
+              <p className="font-medium text-red-600">{request.lyDoTuChoi}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
       <Separator />
@@ -180,27 +185,41 @@ export default function ApprovalDetail({
               </div>
               {decision === "approve" && (
                 <div className="space-y-2">
-                  <Label className="text-base font-medium">Chọn lịch thi mới *</Label>
-                  <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto border rounded-lg p-3">
-                    {schedules.map((schedule, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={`${schedule.date}-${schedule.time}`}
-                          id={`schedule-${index}`}
-                          checked={selectedSchedule === `${schedule.date}-${schedule.time}`}
-                          onClick={() => setSelectedSchedule(`${schedule.date}-${schedule.time}`)}
-                        />
-                        <Label htmlFor={`schedule-${index}`} className="flex-1 cursor-pointer">
-                          <div className="flex justify-between items-center">
-                            <span>
-                              {schedule.date} - {schedule.time}
-                            </span>
-                            <Badge variant="outline">{schedule.slots} chỗ trống</Badge>
-                          </div>
-                        </Label>
-                      </div>
+                  <Label className="text-base font-medium">Chọn ngày thi</Label>
+                  <select
+                    value={selectedDate}
+                    onChange={e => setSelectedDate(e.target.value)}
+                    className="mb-2 border rounded px-2 py-1"
+                  >
+                    <option value="">Tất cả</option>
+                    {[...new Set(schedules.map(s => s.date))].map(date => (
+                      <option key={date} value={date}>{date}</option>
                     ))}
-                  </div>
+                  </select>
+                  <Label className="text-base font-medium">Chọn lịch thi mới *</Label>
+                  <RadioGroup value={selectedSchedule} onValueChange={setSelectedSchedule} className="mt-2">
+                    {schedules
+                      .filter(s => !selectedDate || s.date === selectedDate)
+                      .map((schedule, index) => (
+                        <div key={schedule.id} className="flex items-center space-x-2 mb-2">
+                          <RadioGroupItem
+                            value={schedule.id}
+                            id={`schedule-${index}`}
+                          />
+                          <Label htmlFor={`schedule-${index}`} className="flex-1 cursor-pointer">
+                            <div className="flex flex-col gap-1">
+                              <span>
+                                <b>{schedule.date}</b> - <b>{schedule.time}</b> | Loại: {schedule.type === "it" ? "Tin học" : "Tiếng Anh"} | Cấp độ: {schedule.level}
+                              </span>
+                              <span>
+                                <Badge variant="outline">{schedule.availableSlots} chỗ trống</Badge>
+                                <Badge variant="secondary" className="ml-2">Tối đa: {schedule.maxCapacity}</Badge>
+                              </span>
+                            </div>
+                          </Label>
+                        </div>
+                      ))}
+                  </RadioGroup>
                 </div>
               )}
               {decision === "reject" && (

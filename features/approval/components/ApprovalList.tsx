@@ -17,7 +17,8 @@ export interface ApprovalRequest {
   extensionCount: number;
   status: string;
   requestDate: string;
-  documents: string[];
+  documents: string;
+  lyDoTuChoi:string;
   specialCase: boolean;
 }
 
@@ -92,14 +93,13 @@ export default function ApprovalList({ requests, onSelect }: ApprovalListProps) 
             </TableCell>
             <TableCell>{request.reason}</TableCell>
             <TableCell>{getExtensionCountBadge(request.extensionCount)}</TableCell>
-            <TableCell>{request.requestDate}</TableCell>
+            <TableCell>{request.requestDate ? request.requestDate.slice(0, 10) : ""}</TableCell>
             <TableCell>{getStatusBadge(request.status)}</TableCell>
             <TableCell>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => onSelect(request)}
-                disabled={request.status !== "Chờ xử lý"}
               >
                 <Eye className="w-4 h-4 mr-1" />
                 {request.status === "Chờ xử lý" ? "Xử lý" : "Xem"}

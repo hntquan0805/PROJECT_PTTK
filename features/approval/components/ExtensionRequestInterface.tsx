@@ -5,16 +5,17 @@ import ApprovalDetail from "./ApprovalDetail";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { NextResponse } from "next/server";
+import ScheduleOption from "@/lib/models/ScheduleOption";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
 
-interface Schedule {
-  date: string;
-  time: string;
-  slots: number;
-}
 
 export default function ExtensionRequestInterface() {
   const [requests, setRequests] = useState<ApprovalRequest[]>([]);
-  const [availableSchedules, setAvailableSchedules] = useState<Schedule[]>([]);
+  const [availableSchedules, setAvailableSchedules] = useState<ScheduleOption[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<ApprovalRequest | null>(null);
   const [decision, setDecision] = useState("");
   const [rejectReason, setRejectReason] = useState("");
@@ -22,15 +23,20 @@ export default function ExtensionRequestInterface() {
   const [searchTerm, setSearchTerm] = useState("");
   const [notification, setNotification] = useState<{ type: string; message: string }>({ type: "", message: "" });
   const [isProcessing, setIsProcessing] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     fetch("/api/approval")
       .then((res) => res.json())
       .then((data) => setRequests(data))
       .catch(() => setRequests([]));
-    fetch("/api/lich-thi")
+    fetch("/api/schedules")
       .then((res) => res.json())
-      .then((data) => setAvailableSchedules(data))
+      .then((data) => {
+        // console.log("API schedules data:", data);
+        setAvailableSchedules(data);
+      })
       .catch(() => setAvailableSchedules([]));
   }, []);
 
@@ -47,6 +53,7 @@ export default function ExtensionRequestInterface() {
     setRejectReason("");
     setSelectedSchedule("");
     setNotification({ type: "", message: "" });
+    setOpen(true);
   };
 
   const handleConfirmDecision = async () => {
@@ -72,10 +79,11 @@ export default function ExtensionRequestInterface() {
       return;
     }
     try {
-      const res = await fetch(`/api/approval/${selectedRequest?.id}`, {
+      const res = await fetch(`/api/approval`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          id: selectedRequest?.id,
           decision,
           rejectReason,
           selectedSchedule,
@@ -91,6 +99,7 @@ export default function ExtensionRequestInterface() {
       setDecision("");
       setRejectReason("");
       setSelectedSchedule("");
+      setOpen(false);
     } catch (error) {
       setNotification({ type: "error", message: "Hệ thống lỗi, vui lòng thử lại sau." });
     }
@@ -134,22 +143,28 @@ export default function ExtensionRequestInterface() {
           <ApprovalList requests={filteredRequests} onSelect={handleSelectRequest} />
         </CardContent>
       </Card>
-      {/* Chi tiết yêu cầu và xử lý */}
-      {selectedRequest && (
-        <ApprovalDetail
-          request={selectedRequest}
-          schedules={availableSchedules}
-          onDecision={handleConfirmDecision}
-          notification={notification}
-          isProcessing={isProcessing}
-          decision={decision}
-          setDecision={setDecision}
-          rejectReason={rejectReason}
-          setRejectReason={setRejectReason}
-          selectedSchedule={selectedSchedule}
-          setSelectedSchedule={setSelectedSchedule}
-        />
-      )}
+      {/* Dialog hiển thị form xử lý */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-4xl">
+            <div style={{ maxHeight: "80vh", overflowY: "auto" }}>
+            {selectedRequest && (
+              <ApprovalDetail
+                request={selectedRequest}
+                schedules={availableSchedules}
+                onDecision={handleConfirmDecision}
+                notification={notification}
+                isProcessing={isProcessing}
+                decision={decision}
+                setDecision={setDecision}
+                rejectReason={rejectReason}
+                setRejectReason={setRejectReason}
+                selectedSchedule={selectedSchedule}
+                setSelectedSchedule={setSelectedSchedule}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 
