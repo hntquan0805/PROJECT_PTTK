@@ -6,7 +6,33 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle, AlertCircle, User, Calendar, FileText } from "lucide-react";
+import { CheckCircle, XCircle, AlertCircle, User, Calendar } from "lucide-react";
+import { ApprovalRequest } from "./ApprovalList";
+
+interface Schedule {
+  date: string;
+  time: string;
+  slots: number;
+}
+
+interface Notification {
+  type: string;
+  message: string;
+}
+
+interface ApprovalDetailProps {
+  request: ApprovalRequest;
+  schedules: Schedule[];
+  onDecision: () => void;
+  notification: Notification;
+  isProcessing: boolean;
+  decision: string;
+  setDecision: (v: string) => void;
+  rejectReason: string;
+  setRejectReason: (v: string) => void;
+  selectedSchedule: string;
+  setSelectedSchedule: (v: string) => void;
+}
 
 export default function ApprovalDetail({
   request,
@@ -20,10 +46,10 @@ export default function ApprovalDetail({
   setRejectReason,
   selectedSchedule,
   setSelectedSchedule,
-}) {
+}: ApprovalDetailProps) {
   if (!request) return null;
 
-  const getExtensionCountBadge = (count) => {
+  const getExtensionCountBadge = (count: number) => {
     if (count >= 2) {
       return <Badge variant="destructive">Đã hết lượt ({count}/2)</Badge>;
     } else if (count === 1) {
@@ -162,7 +188,7 @@ export default function ApprovalDetail({
                           value={`${schedule.date}-${schedule.time}`}
                           id={`schedule-${index}`}
                           checked={selectedSchedule === `${schedule.date}-${schedule.time}`}
-                          onCheckedChange={() => setSelectedSchedule(`${schedule.date}-${schedule.time}`)}
+                          onClick={() => setSelectedSchedule(`${schedule.date}-${schedule.time}`)}
                         />
                         <Label htmlFor={`schedule-${index}`} className="flex-1 cursor-pointer">
                           <div className="flex justify-between items-center">

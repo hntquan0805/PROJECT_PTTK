@@ -1,20 +1,26 @@
 "use client";
 import { useEffect, useState } from "react";
-import ApprovalList from "./ApprovalList";
+import ApprovalList, { ApprovalRequest } from "./ApprovalList";
 import ApprovalDetail from "./ApprovalDetail";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
+interface Schedule {
+  date: string;
+  time: string;
+  slots: number;
+}
+
 export default function ExtensionRequestInterface() {
-  const [requests, setRequests] = useState([]);
-  const [availableSchedules, setAvailableSchedules] = useState([]);
-  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [requests, setRequests] = useState<ApprovalRequest[]>([]);
+  const [availableSchedules, setAvailableSchedules] = useState<Schedule[]>([]);
+  const [selectedRequest, setSelectedRequest] = useState<ApprovalRequest | null>(null);
   const [decision, setDecision] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [selectedSchedule, setSelectedSchedule] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [notification, setNotification] = useState({ type: "", message: "" });
+  const [notification, setNotification] = useState<{ type: string; message: string }>({ type: "", message: "" });
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function ExtensionRequestInterface() {
       request.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSelectRequest = (request) => {
+  const handleSelectRequest = (request: ApprovalRequest) => {
     setSelectedRequest(request);
     setDecision("");
     setRejectReason("");
@@ -60,13 +66,13 @@ export default function ExtensionRequestInterface() {
       setIsProcessing(false);
       return;
     }
-    if (selectedRequest.extensionCount >= 2) {
+    if (selectedRequest && selectedRequest.extensionCount >= 2) {
       setNotification({ type: "error", message: "Yêu cầu không hợp lệ! Khách hàng đã gia hạn tối đa 2 lần." });
       setIsProcessing(false);
       return;
     }
     try {
-      const res = await fetch(`/api/approval/${selectedRequest.id}`, {
+      const res = await fetch(`/api/approval/${selectedRequest?.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
