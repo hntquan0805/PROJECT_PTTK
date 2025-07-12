@@ -1,17 +1,21 @@
 // Business Logic Layer - Updated Bill Service
 import { ThanhToanRepository } from "../repositories/thanh-toan.repository"
 import { HoaDonRepository } from "../repositories/hoa-don.repository"
+import { PhieuDangKyRepository } from "../repositories/phieu-dang-ky.repository"
 import { EmailService } from "./email.service"
 import type { ThanhToan, BillDisplayData, CreateHoaDonRequest, HoaDonWithDetails } from "../models/thanh-toan.model"
+import type { PhieuDangKy } from "../models/phieu-dang-ky.model"
 
 export class BillService {
   private thanhToanRepo: ThanhToanRepository
   private hoaDonRepo: HoaDonRepository
+  private phieuDangKyRepo: PhieuDangKyRepository
   private emailService: EmailService
 
   constructor() {
     this.thanhToanRepo = new ThanhToanRepository()
     this.hoaDonRepo = new HoaDonRepository()
+    this.phieuDangKyRepo = new PhieuDangKyRepository()
     this.emailService = new EmailService()
   }
 
@@ -21,6 +25,15 @@ export class BillService {
     } catch (error) {
       console.error("Service error getting pending thanh toan:", error)
       throw new Error("Failed to retrieve pending thanh toan")
+    }
+  }
+
+  async getPendingPhieuDangKy(): Promise<PhieuDangKy[]> {
+    try {
+      return await this.phieuDangKyRepo.findPending()
+    } catch (error) {
+      console.error("Service error getting pending phieu dang ky:", error)
+      throw new Error("Failed to retrieve pending phieu dang ky")
     }
   }
 
