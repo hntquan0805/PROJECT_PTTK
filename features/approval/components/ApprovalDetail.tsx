@@ -123,7 +123,7 @@ export default function ApprovalDetail({
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Trường hợp đặc biệt</Label>
-              <p className="font-medium">{request.specialCase ? "Có (miễn phí)" : "Không (có phí)"}</p>
+              <p className="font-medium">{request.specialCase}</p>
             </div>
             <div>
               <Label className="text-sm font-medium text-muted-foreground">Giấy tờ minh chứng</Label>

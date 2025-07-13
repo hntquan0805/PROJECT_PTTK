@@ -34,13 +34,13 @@ export class YeuCauGiaHanRepository {
       email: row.email ,
       examType: row.tenKiemTra  ,
       currentDate:row.ngaythicu,
-      requestedDate: row.ngaythimongmuon ,
+      requestedDate: row.hasOwnProperty('ngaythimongmuon') ? row.ngaythimongmuon : null,
       reason: row.lyDo ,
       extensionCount:  row.soLanGiaHan ,
       status: row.trangThai,
       requestDate: row.ngayYeuCau,
       documents: row.bangchung , 
-      lyDoTuChoi:row.lydotuchoi,
+      lyDoTuChoi: row.hasOwnProperty('lydotuchoi') ? row.lydotuchoi : null,
       specialCase: "",// tạm thời cho null 
 
     }));
