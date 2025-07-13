@@ -25,39 +25,109 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
     paymentMethod: "",
     paymentDate: "",
     notes: "",
-    status: "pending",
+    status: "pending_billing",
+    loaiKhachHang: "",
+    soLuongThiSinh: 1,
+    troGiaID: "",
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [troGiaOptions, setTroGiaOptions] = useState([])
+  const [selectedTroGia, setSelectedTroGia] = useState(null) // Holds the full selected TroGia object
+
+  useEffect(() => {
+    const fetchTroGiaOptions = async () => {
+      try {
+        const response = await fetch("/api/tro-gia")
+        if (response.ok) {
+          const data = await response.json()
+          console.log("Fetched TroGia options:", data)
+          setTroGiaOptions(data)
+        } else {
+          console.error("Failed to fetch TroGia options")
+        }
+      } catch (error) {
+        console.error("Error fetching TroGia options:", error)
+      }
+    }
+    fetchTroGiaOptions()
+  }, [])
 
   useEffect(() => {
     if (bill) {
       setFormData(bill)
     }
-  }, [bill])
 
-  const handleInputChange = (field, value) => {
+    if (troGiaOptions.length > 0) {
+        const suggestedTroGia = determineSuggestedTroGia(bill.soLuongThiSinh, troGiaOptions)
+        if (suggestedTroGia) {
+          handleTroGiaChange(suggestedTroGia.troGiaId, bill.originalAmount, suggestedTroGia)
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            troGiaId: "",
+          }))
+          setSelectedTroGia(null)
+        }
+      }
+  }, [bill, troGiaOptions])
+
+  const determineSuggestedTroGia = (soLuongThiSinh, options) => {
+    const sortedOptions = [...options].sort((a, b) => a.soThiSinhToiThieu - b.soThiSinhToiThieu)
+
+    let bestMatch = null
+
+    for (let i = 0; i < sortedOptions.length; i++) {
+      const currentTroGia = sortedOptions[i]
+      const nextTroGia = sortedOptions[i + 1]
+
+      if (soLuongThiSinh >= currentTroGia.soThiSinhToiThieu) {
+        if (!nextTroGia || soLuongThiSinh < nextTroGia.soThiSinhToiThieu) {
+          bestMatch = currentTroGia
+          break
+        }
+      }
+    }
+
+    console.log(bestMatch)
+    return bestMatch
+  }
+
+  const handleTroGiaChange = (troGiaId, currentOriginalAmount = formData.originalAmount, specificTroGia = null) => {
+    const selected = specificTroGia || troGiaOptions.find((opt) => opt.troGiaId === troGiaId)
+
+    setSelectedTroGia(selected)
+
     setFormData((prev) => {
-      const updated = { ...prev, [field]: value }
+      let newDiscount = 0
+      let newTotalAmount = currentOriginalAmount
 
-      // Recalculate total when original amount or discount changes
-      if (field === "originalAmount" || field === "discount") {
-        const original = field === "originalAmount" ? value : updated.originalAmount || 0
-        const discountPercent = field === "discount" ? value : updated.discount || 0
-        updated.totalAmount = original * (1 - discountPercent / 100)
+      if (selected) {
+        newDiscount = selected.tiLeGiamGia
+        newTotalAmount = currentOriginalAmount * (1 - newDiscount / 100)
+      } else {
+        newDiscount = 0
+        newTotalAmount = currentOriginalAmount
       }
 
-      return updated
+      return {
+        ...prev,
+        discount: newDiscount,
+        totalAmount: newTotalAmount,
+        troGiaId: selected ? selected.troGiaId : "",
+      }
     })
   }
 
   const handleSendEmail = async () => {
     if (isSubmitting) return
 
-    const billData = {
+    const data = {
       ...formData,
-      id: formData.id || `REG${Date.now()}`,
+      id: formData.id,
       createdDate: new Date().toISOString().split("T")[0],
+      paymentDeadline: new Date(Date(formData.registrationDate) + 3 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     }
 
     setIsSubmitting(true)
@@ -69,16 +139,15 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ billData }),
+        body: JSON.stringify({ data }),
       })
 
       const result = await response.json()
-      console.log("API response:", result)
 
       if (response.ok) {
-        console.log("Bill created successfully:", result.hoaDonId)
-        alert(`Hóa đơn ${result.hoaDonId} đã được tạo và gửi email thành công!`)
-        onSendEmail(billData)
+        console.log("Phieu thanh toan created successfully:", result.phieuTTId)
+        alert(`Phieu thanh toan ${result.phieuTTId} đã được tạo và gửi email thành công!`)
+        onSendEmail(data)
       } else {
         console.error("API error:", result)
         alert(`Gửi email thất bại: ${result.error || "Unknown error"}`)
@@ -93,7 +162,7 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Lập hóa đơn thanh toán</h1>
+      <h1 className="text-2xl font-bold mb-6">Lập phiếu thanh toán</h1>
 
       <div className="flex flex-row lg:flex-row gap-6">
         {/* Customer Information */}
@@ -103,72 +172,58 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Mã phiếu</Label>
-              <Input value={formData.id || ""} onChange={(e) => handleInputChange("id", e.target.value)} />
+              <Label>Mã phiếu đăng ký</Label>
+              <Input value={formData.id || ""} readOnly />
             </div>
 
             <div>
               <Label>Tên khách hàng</Label>
               <div className="flex items-center gap-2">
                 <Input
-                  value={formData.customerName || ""}
-                  onChange={(e) => handleInputChange("customerName", e.target.value)}
+                  value={formData.customerName || ""} readOnly
                 />
-                <Badge variant="outline">Đơn vị</Badge>
+                <Badge variant="outline">{formData.loaiKhachHang}</Badge>
               </div>
             </div>
 
             <div>
               <Label>Email</Label>
-              <Input
-                type="email"
-                value={formData.email || ""}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-              />
+              <Input type="email" value={formData.email || ""} readOnly />
             </div>
 
             <div>
               <Label>Số điện thoại</Label>
-              <Input value={formData.phone || ""} onChange={(e) => handleInputChange("phone", e.target.value)} />
+              <Input value={formData.phone || ""} readOnly />
             </div>
 
             <div>
               <Label>Chứng chỉ</Label>
-              <Input
-                value={formData.certificate || ""}
-                onChange={(e) => handleInputChange("certificate", e.target.value)}
-              />
+              <Input value={formData.loaiChungChi || ""} readOnly />
             </div>
 
             <div className="bg-blue-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 text-blue-600">
                 <span>📧</span>
-                <span>Hóa đơn sẽ được gửi qua email đến khách hàng</span>
+                <span>Phiếu sẽ được gửi qua email đến khách hàng</span>
               </div>
             </div>
 
             <div>
               <Label>Số thí sinh</Label>
               <div className="flex items-center gap-2">
-                <Input value="" readOnly />
+                <Input value={formData.soLuongThiSinh || ""} readOnly />
                 <span className="text-sm text-gray-500">Có thể bạn được tặng giá 10%</span>
               </div>
             </div>
 
             <div>
               <Label>Ngày đăng ký</Label>
-              <Input
-                value={formData.registrationDate || ""}
-                onChange={(e) => handleInputChange("registrationDate", e.target.value)}
-              />
+              <Input value={formData.registrationDate || ""} readOnly />
             </div>
 
             <div>
               <Label>Ngày thi</Label>
-              <Input
-                value={formData.dueDate || ""}
-                onChange={(e) => handleInputChange("dueDate", e.target.value)}
-              />
+              <Input value={formData.dueDate || ""} readOnly />
             </div>
 
             <div>
@@ -193,7 +248,7 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
               <Input
                 type="number"
                 value={formData.originalAmount || ""}
-                onChange={(e) => handleInputChange("originalAmount", Number(e.target.value))}
+                readOnly
               />
             </div>
 
@@ -202,7 +257,7 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
               <Input
                 type="number"
                 value={formData.discount || ""}
-                onChange={(e) => handleInputChange("discount", Number(e.target.value))}
+                readOnly
               />
               <p className="text-xs text-gray-500 mt-1">
                 Giảm giá với hóa đơn 20 thí sinh được giảm 5%, 30 thí sinh được giảm 10%

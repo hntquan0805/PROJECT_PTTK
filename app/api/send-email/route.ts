@@ -1,41 +1,41 @@
 // Presentation Layer - API Controller (updated for new structure)
 import { type NextRequest, NextResponse } from "next/server"
-import { BillService } from "@/lib/services/bill.service"
-import type { BillDisplayData } from "@/lib/models/thanh-toan.model"
+import { PhieuTTService } from "@/lib/services/phieu-thanh-toan.service"
+import type { DisplayData } from "@/lib/models/phieu-dang-ky.model"
 
-const billService = new BillService()
+const phieuTTService = new PhieuTTService()
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json()
-
-    const billData = data.billData
+    const _data = await request.json()
+    const dData = _data.data
 
     // Map frontend data to service model
-    const billDisplayData: BillDisplayData = {
-      id: billData.id,
-      customerName: billData.customerName,
-      email: billData.email,
-      phone: billData.phone,
-      certificate: billData.certificate,
-      registrationDate: billData.registrationDate,
-      dueDate: billData.dueDate,
-      paymentDeadline: billData.paymentDeadline,
-      originalAmount: billData.originalAmount,
-      discount: billData.discount,
-      totalAmount: billData.totalAmount,
-      paymentMethod: billData.paymentMethod,
-      paymentDate: billData.paymentDate,
-      notes: billData.notes,
-      status: "pending",
-      createdDate: billData.createdDate,
+    const data: DisplayData = {
+      id: dData.id,
+      customerName: dData.customerName,
+      email: dData.email,
+      phone: dData.phone,
+      certificate: dData.certificate,
+      registrationDate: dData.registrationDate,
+      dueDate: dData.dueDate,
+      paymentDeadline: dData.paymentDeadline,
+      originalAmount: dData.originalAmount,
+      discount: dData.discount,
+      totalAmount: dData.totalAmount,
+      paymentMethod: dData.paymentMethod,
+      paymentDate: dData.paymentDate,
+      notes: dData.notes,
+      status: "pending_billing",
+      createdDate: dData.createdDate,
+      troGiaId: dData.troGiaId || "",
     }
 
-    const result = await billService.createAndSendHoaDon(billDisplayData)
+    const result = await phieuTTService.createAndSendPhieuTT(data)
 
     return NextResponse.json({
       success: true,
-      hoaDonId: result.hoaDonId,
+      phieuTTId: result.phieuTTId,
       message: result.message,
     })
   } catch (error) {

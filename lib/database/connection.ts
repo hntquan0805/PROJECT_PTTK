@@ -3,14 +3,20 @@ import sql from "mssql"
 
 const config = {
   user: process.env.DB_USER || "sa",
-  password: process.env.DB_PASSWORD || "password",
+  password: process.env.DB_PASSWORD || "*#Phuc123",
   server: process.env.DB_SERVER || "localhost",
-  database: process.env.DB_NAME || "BillManagement",
+  database: process.env.DB_NAME || "ACCI10",
   port: parseInt(process.env.DB_PORT || '1433'),
   options: {
     encrypt: true,
     trustServerCertificate: true,
   },
+}
+
+export async function createConnection(): Promise<sql.ConnectionPool> {
+  const pool = new sql.ConnectionPool(config);
+  await pool.connect();
+  return pool;
 }
 
 export class DatabaseConnection {

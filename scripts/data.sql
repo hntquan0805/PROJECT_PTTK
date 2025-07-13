@@ -1,220 +1,263 @@
-﻿-- Seed data for the new database structure
+﻿-- Dữ liệu mẫu cho hệ thống hóa đơn thanh toán
 
--- Insert sample NhanVien
-INSERT INTO NhanVien (nhanVienId, hoTen, email, soDienThoai, chucVu) VALUES 
-('NV001', N'Nguyễn Văn Admin', 'admin@company.com', '0901234567', N'Quản lý'),
-('NV002', N'Trần Thị Hỗ trợ', 'support@company.com', '0987654321', N'Nhân viên');
+-- Xóa dữ liệu cũ để tránh lỗi khóa chính
+DELETE FROM HoaDon;
+DELETE FROM ThanhToan;
 
--- Insert sample TroGia
-INSERT INTO TroGia (troGiaId, tenTroGia, phanTramGiam, soTienGiam, dieuKien) VALUES 
-('TG001', N'Giảm giá đơn vị 20 thí sinh', 5.00, 0, N'Từ 20 thí sinh trở lên'),
-('TG002', N'Giảm giá đơn vị 30 thí sinh', 10.00, 0, N'Từ 30 thí sinh trở lên'),
-('TG003', N'Giảm giá sinh viên', 15.00, 0, N'Dành cho sinh viên');
+-- Dữ liệu bảng LoaiKiemTra
+INSERT INTO LoaiKiemTra (tenKiemTra, trangThai, donViChamThi, donViCapBang, giaHienTai, conToChuc)
+VALUES 
+(N'IELTS', N'Đang mở', N'British Council', N'British Council', 4500000.00, 1),
+(N'TOEIC', N'Đang mở', N'IIG Việt Nam', N'IIG Việt Nam', 1500000.00, 1),
+(N'TOEFL', N'Đang mở', N'ETS', N'ETS', 5000000.00, 1),
+(N'MOS', N'Đang mở', N'Microsoft', N'Microsoft', 1200000.00, 1),
+(N'Adobe Photoshop', N'Đang mở', N'Certiport', N'Adobe', 1400000.00, 1),
+(N'Adobe Illustrator', N'Đang mở', N'Certiport', N'Adobe', 1400000.00, 1),
+(N'CCNA', N'Đang mở', N'Cisco', N'Cisco', 3500000.00, 1),
+(N'IC3', N'Đang mở', N'Certiport', N'Certiport', 1200000.00, 1);
 
--- Insert sample KhachHang
-INSERT INTO KhachHang (khachHangId, hoTen, email, diaChi, soDienThoai, loaiKhachHang) VALUES 
-('KH001', N'Nguyễn Văn A', 'nguyenvana@example.com', N'123 Đường ABC, Quận 1, TP.HCM', '0901234567', N'Tự do'),
-('KH002', N'Trường THPT Nguyễn Trãi', 'phamnam@truongthpt.edu.vn', N'456 Đường XYZ, Quận 3, TP.HCM', '0978561412', N'Đơn vị'),
-('KH003', N'Công ty TNHH XYZ', 'contact@xyz.com', N'789 Đường DEF, Quận 5, TP.HCM', '0987654321', N'Đơn vị');
+-- Dữ liệu bảng NguoiDung
+INSERT INTO NguoiDung (nguoiDungId, username, password, loaiNguoiDung)
+VALUES 
+(1, 'admin', 'admin123', N'admin'),
+(2, 'taichinh1', 'taichinh123', N'tài chính'),
+(3, 'hanhchinh1', 'hanhchinh123', N'tổ chức hành chính');
 
--- Insert sample PhieuDangKy
-INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, loaiChungChi, ghiChu, nhanVienId, khachHangId) VALUES 
-('PDK001', '2025-07-08', 0, 1, 0, 0, '2025-07-15 09:00:00', N'Chứng chỉ Tin học Văn phòng', '', 'NV001', 'KH001'),
-('PDK002', '2025-07-09', 0, 30, 0, 0, '2025-07-16 09:00:00', N'Chứng chỉ Tin học Nâng cao', 'Offline', 'NV001', 'KH002'),
-('PDK003', '2025-07-10', 1, 5, 1, 0, '2025-07-17 09:00:00', N'Chứng chỉ Ứng dụng Công nghệ thông tin', 'Online', 'NV002', 'KH003');
+-- Dữ liệu bảng NhanVien
+INSERT INTO NhanVien (nhanVienId, hoTen, email, diaChi, soDienThoai, loaiNhanVien, trangThai, nguoiDungId)
+VALUES 
+('NV001', N'Nguyễn Văn An', 'an.nguyen@example.com', N'Hà Nội', '0901234567', N'Quản lý', N'Đang làm việc', 1),
+('NV002', N'Trần Thị Bình', 'binh.tran@example.com', N'Hà Nội', '0912345678', N'Tài chính', N'Đang làm việc', 2),
+('NV003', N'Lê Văn Cường', 'cuong.le@example.com', N'Hà Nội', '0923456789', N'Hành chính', N'Đang làm việc', 3);
 
--- Insert sample ThanhToan
-INSERT INTO ThanhToan (thanhToanId, soTienBanDau, hanThanhToan, soTienGiamGia, tongSoTien, loaiThanhToan, trangThai, troGiaId, nhanVienId, phieuDangKyId, phieuGiaHanId) VALUES 
-('TT001', 1500000, '2025-07-11 23:59:59', 0, 1500000, N'Chuyển khoản', N'Chưa lập hóa đơn', NULL, 'NV001', 'PDK001', NULL),
-('TT002', 15000000, '2025-07-12 23:59:59', 1500000, 13500000, N'Chuyển khoản', N'Đã lập hóa đơn', 'TG002', 'NV001', 'PDK002', NULL),
-('TT003', 7500000, '2025-07-13 23:59:59', 1125000, 6375000, N'Tiền mặt', N'Đã lập hóa đơn', 'TG003', 'NV002', 'PDK003', NULL);
+-- Dữ liệu bảng LichThi với thông tin chi tiết hơn
+-- Xóa dữ liệu cũ
+DELETE FROM ChiTietDangKy;
+DELETE FROM LichThi;
 
--- Insert sample HoaDon (some payments already have invoices)
-INSERT INTO HoaDon (ngayTao, ngayThanhToan, hinhThucThanhToan, thanhToanId, trangThai) VALUES 
-('2025-07-10 10:30:00', '2025-07-10 14:20:00', N'Tiền mặt', 'TT003', N'Đã thanh toán'),
-('2025-07-09 14:15:00', NULL, N'Chuyển khoản', 'TT002', N'Đã gửi');
+-- Thêm dữ liệu mới cho LichThi
+INSERT INTO LichThi (lichThiId, thoiGianThi, ngayThi, diaDiem, soThiSinhToiDa, soThiSinhDaDangKy, loaiKiemTraId)
+VALUES 
+('IELTS-2025-08-05', '08:00:00', '2025-08-05', N'Trung tâm Anh ngữ ABC - 123 Lê Lợi, Q.1, TP.HCM', 30, 10, 1),
+('TOEIC-2025-08-10', '13:30:00', '2025-08-10', N'Trung tâm Anh ngữ XYZ - 456 Nguyễn Huệ, Q.1, TP.HCM', 50, 25, 2),
+('TOEFL-2025-08-15', '09:00:00', '2025-08-15', N'Trung tâm Anh ngữ MNP - 789 Đồng Khởi, Q.1, TP.HCM', 20, 5, 3),
+('MOS-2025-08-20', '14:00:00', '2025-08-20', N'Trung tâm Tin học DEF - 101 Lý Tự Trọng, Q.1, TP.HCM', 40, 15, 4),
+('PHOTOSHOP-2025-08-12', '09:30:00', '2025-08-12', N'Trung tâm Đồ họa HJK - 202 Hai Bà Trưng, Q.1, TP.HCM', 30, 5, 5),
+('ILLUSTRATOR-2025-08-18', '13:00:00', '2025-08-18', N'Trung tâm Đồ họa HJK - 202 Hai Bà Trưng, Q.1, TP.HCM', 25, 3, 6),
+('CCNA-2025-08-22', '08:30:00', '2025-08-22', N'Trung tâm CNTT STU - 303 Nguyễn Thị Minh Khai, Q.3, TP.HCM', 20, 8, 7),
+('IC3-2025-08-25', '14:30:00', '2025-08-25', N'Trung tâm Tin học VWX - 404 Võ Văn Tần, Q.3, TP.HCM', 35, 10, 8);
 
--- Insert sample ChiTietDangKy data
--- This links students to their registration forms and exam schedules
+-- Thêm lịch thi sắp tới để mở rộng dữ liệu
+INSERT INTO LichThi (lichThiId, thoiGianThi, ngayThi, diaDiem, soThiSinhToiDa, soThiSinhDaDangKy, loaiKiemTraId)
+VALUES 
+('IELTS-2025-08-28', '08:00:00', '2025-08-28', N'Trung tâm Anh ngữ ABC - 123 Lê Lợi, Q.1, TP.HCM', 30, 0, 1),
+('TOEIC-2025-08-30', '13:30:00', '2025-08-30', N'Trung tâm Anh ngữ XYZ - 456 Nguyễn Huệ, Q.1, TP.HCM', 50, 0, 2);
 
--- PDK001 - Individual student (1 student)
-INSERT INTO ChiTietDangKy (phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId) VALUES 
-('PDK001', 'TS001', 1500000, 1, 'LT001');
+-- Dữ liệu bảng KhachHang
+INSERT INTO KhachHang (khachHangId, hoTen, email, diaChi, soDienThoai, loaiKhachHang)
+VALUES 
+('KH001', N'Phạm Văn Đức', 'duc.pham@gmail.com', N'Hà Nội', '0912345678', N'Tự do'),
+('KH002', N'Công ty TNHH ABC', 'contact@abc.com', N'TP. Hồ Chí Minh', '0823456789', N'Đơn vị'),
+('KH003', N'Trường Đại học XYZ', 'contact@xyz.edu.vn', N'Đà Nẵng', '0934567890', N'Đơn vị'),
+('KH004', N'Hoàng Thị Lan', 'lan.hoang@gmail.com', N'Hải Phòng', '0945678901', N'Tự do'),
+('KH005', N'Trần Văn Khánh', 'khanh.tran@gmail.com', N'Quảng Ninh', '0956789012', N'Tự do'),
+('KH006', N'Nguyễn Thị Hương', 'huong.nguyen@gmail.com', N'Cần Thơ', '0967890123', N'Tự do'),
+('KH007', N'Công ty Cổ phần DEF', 'info@def.com.vn', N'Hà Nội', '0978901234', N'Đơn vị'),
+('KH008', N'Trường Cao đẳng MNO', 'info@mno.edu.vn', N'TP. Hồ Chí Minh', '0989012345', N'Đơn vị');
 
--- PDK002 - Trường THPT Nguyễn Trãi (30 students) - Spread across multiple exam slots
-INSERT INTO ChiTietDangKy (phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId) VALUES 
--- First batch - LT002 (25 students max, so 25 students)
-('PDK002', 'TS003', 500000, 1, 'LT002'),
-('PDK002', 'TS004', 500000, 1, 'LT002'),
-('PDK002', 'TS005', 500000, 1, 'LT002'),
-('PDK002', 'TS006', 500000, 1, 'LT002'),
-('PDK002', 'TS007', 500000, 1, 'LT002'),
-('PDK002', 'TS008', 500000, 1, 'LT002'),
-('PDK002', 'TS009', 500000, 1, 'LT002'),
-('PDK002', 'TS010', 500000, 1, 'LT002'),
-('PDK002', 'TS011', 500000, 1, 'LT002'),
-('PDK002', 'TS012', 500000, 1, 'LT002'),
-('PDK002', 'TS013', 500000, 1, 'LT002'),
-('PDK002', 'TS014', 500000, 1, 'LT002'),
-('PDK002', 'TS015', 500000, 1, 'LT002'),
-('PDK002', 'TS016', 500000, 1, 'LT002'),
-('PDK002', 'TS017', 500000, 1, 'LT002'),
-('PDK002', 'TS018', 500000, 1, 'LT002'),
-('PDK002', 'TS019', 500000, 1, 'LT002'),
-('PDK002', 'TS020', 500000, 1, 'LT002'),
-('PDK002', 'TS021', 500000, 1, 'LT002'),
-('PDK002', 'TS022', 500000, 1, 'LT002'),
-('PDK002', 'TS023', 500000, 1, 'LT002'),
-('PDK002', 'TS024', 500000, 1, 'LT002'),
-('PDK002', 'TS025', 500000, 1, 'LT002'),
-('PDK002', 'TS026', 500000, 1, 'LT002'),
-('PDK002', 'TS027', 500000, 1, 'LT002'),
+-- Dữ liệu bảng ThiSinh
+INSERT INTO ThiSinh (thiSinhId, hoTen, ngaySinh, cccd, khachHangId)
+VALUES 
+('TS001', N'Nguyễn Thị Mai', '2000-05-15', '123456789012', 'KH001'),
+('TS002', N'Trần Văn Hùng', '1998-08-20', '234567890123', 'KH001'),
+('TS003', N'Lê Thị Hà', '1995-03-10', '345678901234', 'KH002'),
+('TS004', N'Phạm Văn Tuấn', '1999-12-05', '456789012345', 'KH002'),
+('TS005', N'Hoàng Văn Nam', '2001-07-25', '567890123456', 'KH003'),
+('TS006', N'Vũ Thị Linh', '2002-04-30', '678901234567', 'KH004'),
+('TS007', N'Phan Văn Minh', '1997-09-18', '789012345678', 'KH005'),
+('TS008', N'Đặng Thị Hà', '1999-11-22', '890123456789', 'KH005'),
+('TS009', N'Lý Văn Hoàng', '2000-03-14', '901234567890', 'KH006'),
+('TS010', N'Ngô Thị Thảo', '1998-06-28', '012345678901', 'KH006'),
+('TS011', N'Vương Văn Đạt', '2001-01-05', '112233445566', 'KH007'),
+('TS012', N'Trịnh Thị Mai', '2002-08-12', '223344556677', 'KH007'),
+('TS013', N'Lưu Văn Hùng', '1999-05-20', '334455667788', 'KH007'),
+('TS014', N'Đinh Thị Hương', '2000-10-15', '445566778899', 'KH007'),
+('TS015', N'Bùi Văn Nam', '1997-03-30', '556677889900', 'KH007'),
+('TS016', N'Mai Thị Lan', '1998-07-22', '667788990011', 'KH008'),
+('TS017', N'Dương Văn Phúc', '2001-09-18', '778899001122', 'KH008'),
+('TS018', N'Hà Thị Thu', '2002-11-05', '889900112233', 'KH008'),
+('TS019', N'Tạ Văn Long', '1999-04-25', '990011223344', 'KH008'),
+('TS020', N'Lương Thị Nhung', '2000-12-10', '001122334455', 'KH008');
 
--- Remaining 5 students in LT003
-('PDK002', 'TS028', 500000, 1, 'LT003'),
-('PDK002', 'TS029', 500000, 1, 'LT003'),
-('PDK002', 'TS030', 500000, 1, 'LT003'),
-('PDK002', 'TS031', 500000, 1, 'LT003'),
-('PDK002', 'TS032', 500000, 1, 'LT003');
+-- Dữ liệu bảng TroGia
+INSERT INTO TroGia (troGiaId, tiLeGiamGia, moTaChinhSach, soThiSinhToiThieu, truongHopMienPhiGiaHan, doiTuong, ngayBatDau, ngayKetThuc)
+VALUES 
+('TG001', 5.00, N'Giảm 5% cho nhóm từ 5 thí sinh', 5, NULL, N'Tự do', '2025-01-01', '2025-12-31'),
+('TG002', 10.00, N'Giảm 10% cho đơn vị đăng ký từ 10 thí sinh', 10, NULL, N'Đơn vị', '2025-01-01', '2025-12-31'),
+('TG003', 15.00, N'Giảm 15% cho trường học đăng ký từ 15 thí sinh', 15, NULL, N'Đơn vị', '2025-01-01', '2025-12-31');
 
--- PDK003 - Công ty TNHH XYZ (5 students) - All in one exam slot
-INSERT INTO ChiTietDangKy (phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId) VALUES 
-('PDK003', 'TS033', 1500000, 1, 'LT004'),
-('PDK003', 'TS034', 1500000, 1, 'LT004'),
-('PDK003', 'TS035', 1500000, 1, 'LT004'),
-('PDK003', 'TS036', 1500000, 1, 'LT004'),
-('PDK003', 'TS037', 1500000, 1, 'LT004');
+-- Dữ liệu bảng PhieuDangKy
+INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, ghiChu, loaiChungChi, nhanVienId, khachHangId, loaiKiemTraId)
+VALUES 
+('PDK001', '2025-07-11', 0, 2, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS', N'IELTS', 'NV001', 'KH001', 1),
+('PDK002', '2025-07-11', 0, 5, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên', N'TOEIC', 'NV001', 'KH002', 2),
+('PDK003', '2025-07-12', 0, 10, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL cho sinh viên', N'TOEFL', 'NV001', 'KH003', 3),
+('PDK004', '2025-07-12', 0, 1, 1, 0, '2025-08-20 14:00:00', N'Đăng ký thi MOS', N'MOS', 'NV001', 'KH004', 4),
+('PDK005', '2025-07-12', 0, 2, 1, 0, '2025-08-12 09:30:00', N'Đăng ký thi chứng chỉ Photoshop', N'Adobe Photoshop', 'NV001', 'KH005', 5),
+('PDK006', '2025-07-13', 0, 2, 1, 0, '2025-08-18 13:00:00', N'Đăng ký thi chứng chỉ Illustrator', N'Adobe Illustrator', 'NV001', 'KH006', 6),
+('PDK007', '2025-07-13', 0, 5, 1, 0, '2025-08-22 08:30:00', N'Đăng ký thi CCNA cho nhân viên IT', N'CCNA', 'NV001', 'KH007', 7),
+('PDK008', '2025-07-13', 0, 5, 1, 0, '2025-08-25 14:30:00', N'Đăng ký thi IC3 cho sinh viên', N'IC3', 'NV001', 'KH008', 8),
+('PDK009', '2025-07-13', 0, 3, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS đợt cuối năm', N'IELTS', 'NV002', 'KH006', 1),
+('PDK010', '2025-07-14', 0, 8, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên khối kỹ thuật', N'TOEIC', 'NV002', 'KH007', 2),
+('PDK011', '2025-07-14', 0, 12, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL đợt cuối năm', N'TOEFL', 'NV003', 'KH008', 3),
+('PDK012', '2025-07-14', 0, 15, 1, 0, '2025-08-20 14:00:00', N'Đăng ký thi MOS cho sinh viên khóa mới', N'MOS', 'NV003', 'KH008', 4);
 
--- Create indexes for better performance
-CREATE INDEX IX_ChiTietDangKy_PhieuDangKyId ON ChiTietDangKy(phieuDangKyId);
-CREATE INDEX IX_ChiTietDangKy_ThiSinhId ON ChiTietDangKy(thiSinhId);
-CREATE INDEX IX_ChiTietDangKy_LichThiId ON ChiTietDangKy(lichThiId);
-CREATE INDEX IX_ChiTietDangKy_DaChoXepLich ON ChiTietDangKy(daChoXepLich);
+-- Dữ liệu bảng ChiTietDangKy với thông tin thời gian chi tiết hơn
+INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
+VALUES 
+-- PDK001 - IELTS
+('CTDK001', 'PDK001', 'TS001', 4500000.00, 1, 'IELTS-2025-08-05'),
+('CTDK002', 'PDK001', 'TS002', 4500000.00, 1, 'IELTS-2025-08-05'),
 
--- Insert sample data for LichThi (Exam Schedule)
-INSERT INTO LichThi (lichThiId, ngayThi, gioBatDau, gioKetThuc, diaDiem, soLuongToiDa) VALUES 
--- Week 1 - July 2025
-('LT001', '2025-07-15', '08:00:00', '10:00:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT002', '2025-07-15', '10:30:00', '12:30:00', N'Phòng Lab 2 - Tầng 2', 25),
-('LT003', '2025-07-15', '14:00:00', '16:00:00', N'Phòng Lab 3 - Tầng 3', 35),
-('LT004', '2025-07-16', '08:00:00', '10:00:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT005', '2025-07-16', '10:30:00', '12:30:00', N'Phòng Lab 4 - Tầng 3', 20),
-('LT006', '2025-07-16', '14:00:00', '16:00:00', N'Phòng Lab 2 - Tầng 2', 25),
+-- PDK002 - TOEIC
+('CTDK003', 'PDK002', 'TS003', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK004', 'PDK002', 'TS004', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK005', 'PDK003', 'TS005', 5000000.00, 1, 'TOEFL-2025-08-15'),
+('CTDK006', 'PDK004', 'TS006', 1200000.00, 1, 'MOS-2025-08-20'),
 
--- Week 2 - July 2025
-('LT007', '2025-07-17', '08:00:00', '10:00:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT008', '2025-07-17', '10:30:00', '12:30:00', N'Phòng Lab 3 - Tầng 3', 35),
-('LT009', '2025-07-17', '14:00:00', '16:00:00', N'Phòng Lab 5 - Tầng 4', 40),
-('LT010', '2025-07-18', '08:00:00', '10:00:00', N'Phòng Lab 2 - Tầng 2', 25),
-('LT011', '2025-07-18', '10:30:00', '12:30:00', N'Phòng Lab 4 - Tầng 3', 20),
-('LT012', '2025-07-18', '14:00:00', '16:00:00', N'Phòng Lab 1 - Tầng 2', 30),
+-- PDK005 - Adobe Photoshop
+('CTDK007', 'PDK005', 'TS007', 1400000.00, 1, 'PHOTOSHOP-2025-08-12'),
+('CTDK008', 'PDK005', 'TS008', 1400000.00, 1, 'PHOTOSHOP-2025-08-12'),
 
--- Week 3 - July 2025
-('LT013', '2025-07-19', '08:00:00', '10:00:00', N'Phòng Lab 3 - Tầng 3', 35),
-('LT014', '2025-07-19', '10:30:00', '12:30:00', N'Phòng Lab 5 - Tầng 4', 40),
-('LT015', '2025-07-19', '14:00:00', '16:00:00', N'Phòng Lab 2 - Tầng 2', 25),
-('LT016', '2025-07-22', '08:00:00', '10:00:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT017', '2025-07-22', '10:30:00', '12:30:00', N'Phòng Lab 4 - Tầng 3', 20),
-('LT018', '2025-07-22', '14:00:00', '16:00:00', N'Phòng Lab 3 - Tầng 3', 35),
+-- PDK006 - Adobe Illustrator
+('CTDK009', 'PDK006', 'TS009', 1400000.00, 1, 'ILLUSTRATOR-2025-08-18'),
+('CTDK010', 'PDK006', 'TS010', 1400000.00, 1, 'ILLUSTRATOR-2025-08-18'),
 
--- Week 4 - July 2025
-('LT019', '2025-07-23', '08:00:00', '10:00:00', N'Phòng Lab 5 - Tầng 4', 40),
-('LT020', '2025-07-23', '10:30:00', '12:30:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT021', '2025-07-23', '14:00:00', '16:00:00', N'Phòng Lab 2 - Tầng 2', 25),
-('LT022', '2025-07-24', '08:00:00', '10:00:00', N'Phòng Lab 4 - Tầng 3', 20),
-('LT023', '2025-07-24', '10:30:00', '12:30:00', N'Phòng Lab 3 - Tầng 3', 35),
-('LT024', '2025-07-24', '14:00:00', '16:00:00', N'Phòng Lab 5 - Tầng 4', 40),
+-- PDK007 - CCNA
+('CTDK011', 'PDK007', 'TS011', 3500000.00, 1, 'CCNA-2025-08-22'),
+('CTDK012', 'PDK007', 'TS012', 3500000.00, 1, 'CCNA-2025-08-22'),
+('CTDK013', 'PDK007', 'TS013', 3500000.00, 1, 'CCNA-2025-08-22'),
+('CTDK014', 'PDK007', 'TS014', 3500000.00, 1, 'CCNA-2025-08-22'),
+('CTDK015', 'PDK007', 'TS015', 3500000.00, 1, 'CCNA-2025-08-22'),
 
--- August 2025 - Additional slots
-('LT025', '2025-08-01', '08:00:00', '10:00:00', N'Phòng Lab 1 - Tầng 2', 30),
-('LT026', '2025-08-01', '10:30:00', '12:30:00', N'Phòng Lab 2 - Tầng 2', 25),
-('LT027', '2025-08-01', '14:00:00', '16:00:00', N'Phòng Lab 3 - Tầng 3', 35),
-('LT028', '2025-08-02', '08:00:00', '10:00:00', N'Phòng Lab 4 - Tầng 3', 20),
-('LT029', '2025-08-02', '10:30:00', '12:30:00', N'Phòng Lab 5 - Tầng 4', 40),
-('LT030', '2025-08-02', '14:00:00', '16:00:00', N'Phòng Lab 1 - Tầng 2', 30);
+-- PDK008 - IC3
+('CTDK016', 'PDK008', 'TS016', 1200000.00, 1, 'IC3-2025-08-25'),
+('CTDK017', 'PDK008', 'TS017', 1200000.00, 1, 'IC3-2025-08-25'),
+('CTDK018', 'PDK008', 'TS018', 1200000.00, 1, 'IC3-2025-08-25'),
+('CTDK019', 'PDK008', 'TS019', 1200000.00, 1, 'IC3-2025-08-25'),
+('CTDK020', 'PDK008', 'TS020', 1200000.00, 1, 'IC3-2025-08-25'),
 
--- Create indexes for better performance
-CREATE INDEX IX_LichThi_NgayThi ON LichThi(ngayThi);
-CREATE INDEX IX_LichThi_DiaDiem ON LichThi(diaDiem);
+-- PDK009 - IELTS (đợt cuối năm)
+('CTDK021', 'PDK009', 'TS009', 4500000.00, 1, 'IELTS-2025-08-05'),
+('CTDK022', 'PDK009', 'TS010', 4500000.00, 1, 'IELTS-2025-08-05'),
+('CTDK023', 'PDK009', 'TS006', 4500000.00, 1, 'IELTS-2025-08-05'),
 
-INSERT INTO KhachHang (khachHangId, hoTen, email, diaChi, soDienThoai, loaiKhachHang) VALUES 
-('KH004', N'Nguyễn Thị B', 'nguyenthib@example.com', N'321 Đường GHI, Quận 7, TP.HCM', '0912345678', N'Tự do'),
-('KH005', N'Công ty ABC', 'info@abc.com', N'654 Đường JKL, Quận 2, TP.HCM', '0923456789', N'Đơn vị');
+-- PDK010 - TOEIC (nhân viên kỹ thuật)
+('CTDK024', 'PDK010', 'TS011', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK025', 'PDK010', 'TS012', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK026', 'PDK010', 'TS013', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK027', 'PDK010', 'TS014', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK028', 'PDK010', 'TS015', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK029', 'PDK010', 'TS003', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK030', 'PDK010', 'TS004', 1500000.00, 1, 'TOEIC-2025-08-10'),
+('CTDK031', 'PDK010', 'TS005', 1500000.00, 1, 'TOEIC-2025-08-10');
 
--- Insert sample ThiSinh data
-INSERT INTO ThiSinh (thiSinhId, hoTen, ngaySinh, cccd, khachHangId) VALUES 
--- Individual customers (Tự do)
-('TS001', N'Nguyễn Văn A', '1995-03-15', '123456789012', 'KH001'),
-('TS002', N'Nguyễn Thị B', '1998-07-22', '234567890123', 'KH004'),
+-- Thêm dữ liệu cho các phiếu đăng ký từ PDK011 và PDK012
+DECLARE @count INT = 32;
+DECLARE @thiSinhId INT = 1;
 
--- Organization customers - Multiple students per organization
--- Trường THPT Nguyễn Trãi (KH002) - 30 students
-('TS003', N'Trần Văn C', '2005-01-10', '345678901234', 'KH002'),
-('TS004', N'Lê Thị D', '2005-02-15', '456789012345', 'KH002'),
-('TS005', N'Phạm Văn E', '2005-03-20', '567890123456', 'KH002'),
-('TS006', N'Hoàng Thị F', '2005-04-25', '678901234567', 'KH002'),
-('TS007', N'Vũ Văn G', '2005-05-30', '789012345678', 'KH002'),
-('TS008', N'Đặng Thị H', '2005-06-05', '890123456789', 'KH002'),
-('TS009', N'Bùi Văn I', '2005-07-10', '901234567890', 'KH002'),
-('TS010', N'Ngô Thị K', '2005-08-15', '012345678901', 'KH002'),
-('TS011', N'Dương Văn L', '2005-09-20', '123450678902', 'KH002'),
-('TS012', N'Tạ Thị M', '2005-10-25', '234561789013', 'KH002'),
-('TS013', N'Lý Văn N', '2005-11-30', '345672890124', 'KH002'),
-('TS014', N'Võ Thị O', '2005-12-05', '456783901235', 'KH002'),
-('TS015', N'Trịnh Văn P', '2006-01-10', '567894012346', 'KH002'),
-('TS016', N'Đinh Thị Q', '2006-02-15', '678905123457', 'KH002'),
-('TS017', N'Hồ Văn R', '2006-03-20', '789016234568', 'KH002'),
-('TS018', N'Mai Thị S', '2006-04-25', '890127345679', 'KH002'),
-('TS019', N'Chu Văn T', '2006-05-30', '901238456780', 'KH002'),
-('TS020', N'Lưu Thị U', '2006-06-05', '012349567891', 'KH002'),
-('TS021', N'Từ Văn V', '2006-07-10', '123450678902', 'KH002'),
-('TS022', N'Ông Thị W', '2006-08-15', '234561789013', 'KH002'),
-('TS023', N'Uông Văn X', '2006-09-20', '345672890124', 'KH002'),
-('TS024', N'Ứng Thị Y', '2006-10-25', '456783901235', 'KH002'),
-('TS025', N'Ưng Văn Z', '2006-11-30', '567894012346', 'KH002'),
-('TS026', N'Âu Thị AA', '2006-12-05', '678905123457', 'KH002'),
-('TS027', N'Ấu Văn BB', '2007-01-10', '789016234568', 'KH002'),
-('TS028', N'Ầu Thị CC', '2007-02-15', '890127345679', 'KH002'),
-('TS029', N'Ẩu Văn DD', '2007-03-20', '901238456780', 'KH002'),
-('TS030', N'Ậu Thị EE', '2007-04-25', '012349567891', 'KH002'),
-('TS031', N'Ắc Văn FF', '2007-05-30', '123450678902', 'KH002'),
-('TS032', N'Ặc Thị GG', '2007-06-05', '234561789013', 'KH002'),
+-- Thêm chi tiết đăng ký cho PDK011 (12 thí sinh) - TOEFL
+WHILE @thiSinhId <= 12
+BEGIN
+    INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
+    VALUES 
+    ('CTDK' + RIGHT('000' + CAST(@count AS VARCHAR(3)), 3), 'PDK011', 
+     'TS' + RIGHT('000' + CAST((@thiSinhId % 20 + 1) AS VARCHAR(3)), 3),  -- Sử dụng modulo để không vượt quá thí sinh đã tạo
+     5000000.00, 1, 'TOEFL-2025-08-15');
+    
+    SET @count = @count + 1;
+    SET @thiSinhId = @thiSinhId + 1;
+END;
 
--- Công ty TNHH XYZ (KH003) - 5 students
-('TS033', N'Nguyễn Văn HH', '1990-01-15', '345672890124', 'KH003'),
-('TS034', N'Trần Thị II', '1992-03-20', '456783901235', 'KH003'),
-('TS035', N'Lê Văn JJ', '1988-05-25', '567894012346', 'KH003'),
-('TS036', N'Phạm Thị KK', '1995-07-30', '678905123457', 'KH003'),
-('TS037', N'Hoàng Văn LL', '1993-09-10', '789016234568', 'KH003'),
+-- Thêm chi tiết đăng ký cho PDK012 (15 thí sinh) - MOS
+SET @thiSinhId = 1;
+WHILE @thiSinhId <= 15
+BEGIN
+    INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
+    VALUES 
+    ('CTDK' + RIGHT('000' + CAST(@count AS VARCHAR(3)), 3), 'PDK012', 
+     'TS' + RIGHT('000' + CAST((@thiSinhId % 20 + 1) AS VARCHAR(3)), 3),  -- Sử dụng modulo để không vượt quá thí sinh đã tạo
+     1200000.00, 1, 'MOS-2025-08-20');
+    
+    SET @count = @count + 1;
+    SET @thiSinhId = @thiSinhId + 1;
+END;
 
--- Công ty ABC (KH005) - 25 students
-('TS038', N'Vũ Văn MM', '1991-02-12', '890127345679', 'KH005'),
-('TS039', N'Đặng Thị NN', '1994-04-18', '901238456780', 'KH005'),
-('TS040', N'Bùi Văn OO', '1989-06-22', '012349567891', 'KH005'),
-('TS041', N'Ngô Thị PP', '1996-08-28', '123450678902', 'KH005'),
-('TS042', N'Dương Văn QQ', '1987-10-14', '234561789013', 'KH005'),
-('TS043', N'Tạ Thị RR', '1992-12-19', '345672890124', 'KH005'),
-('TS044', N'Lý Văn SS', '1990-01-25', '456783901235', 'KH005'),
-('TS045', N'Võ Thị TT', '1993-03-30', '567894012346', 'KH005'),
-('TS046', N'Trịnh Văn UU', '1988-05-15', '678905123457', 'KH005'),
-('TS047', N'Đinh Thị VV', '1995-07-20', '789016234568', 'KH005'),
-('TS048', N'Hồ Văn WW', '1991-09-25', '890127345679', 'KH005'),
-('TS049', N'Mai Thị XX', '1994-11-30', '901238456780', 'KH005'),
-('TS050', N'Chu Văn YY', '1989-01-05', '012349567891', 'KH005'),
-('TS051', N'Lưu Thị ZZ', '1996-03-10', '123450678902', 'KH005'),
-('TS052', N'Từ Văn AAA', '1987-05-15', '234561789013', 'KH005'),
-('TS053', N'Ông Thị BBB', '1992-07-20', '345672890124', 'KH005'),
-('TS054', N'Uông Văn CCC', '1990-09-25', '456783901235', 'KH005'),
-('TS055', N'Ứng Thị DDD', '1993-11-30', '567894012346', 'KH005'),
-('TS056', N'Ưng Văn EEE', '1988-01-15', '678905123457', 'KH005'),
-('TS057', N'Âu Thị FFF', '1995-03-20', '789016234568', 'KH005'),
-('TS058', N'Ấu Văn GGG', '1991-05-25', '890127345679', 'KH005'),
-('TS059', N'Ầu Thị HHH', '1994-07-30', '901238456780', 'KH005'),
-('TS060', N'Ẩu Văn III', '1989-09-15', '012349567891', 'KH005'),
-('TS061', N'Ậu Thị JJJ', '1996-11-20', '123450678902', 'KH005'),
-('TS062', N'Ắc Văn KKK', '1987-01-25', '234561789013', 'KH005');
+-- Tạo thêm một số phiếu đăng ký cho lịch thi sắp tới (chưa thanh toán)
+INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, ghiChu, loaiChungChi, nhanVienId, khachHangId, loaiKiemTraId)
+VALUES 
+('PDK013', '2025-07-14', 0, 3, 1, 0, '2025-08-28 08:00:00', N'Đăng ký thi IELTS khóa mới', N'IELTS', 'NV001', 'KH005', 1),
+('PDK014', '2025-07-14', 0, 10, 1, 0, '2025-08-30 13:30:00', N'Đăng ký thi TOEIC đợt 1/2025', N'TOEIC', 'NV002', 'KH002', 2);
 
--- Create indexes for better performance
-CREATE INDEX IX_ThiSinh_KhachHangId ON ThiSinh(khachHangId);
-CREATE INDEX IX_ThiSinh_CCCD ON ThiSinh(cccd);
+-- Thêm chi tiết đăng ký cho PDK013 (IELTS khóa mới)
+INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
+VALUES 
+('CTDK059', 'PDK013', 'TS007', 4500000.00, 1, 'IELTS-2025-08-28'),
+('CTDK060', 'PDK013', 'TS008', 4500000.00, 1, 'IELTS-2025-08-28'),
+('CTDK061', 'PDK013', 'TS009', 4500000.00, 1, 'IELTS-2025-08-28');
 
+-- Thêm chi tiết đăng ký cho PDK014 (TOEIC đợt 1/2024)
+INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
+VALUES 
+('CTDK062', 'PDK014', 'TS003', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK063', 'PDK014', 'TS004', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK064', 'PDK014', 'TS005', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK065', 'PDK014', 'TS011', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK066', 'PDK014', 'TS012', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK067', 'PDK014', 'TS013', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK068', 'PDK014', 'TS014', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK069', 'PDK014', 'TS015', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK070', 'PDK014', 'TS016', 1500000.00, 1, 'TOEIC-2025-08-30'),
+('CTDK071', 'PDK014', 'TS017', 1500000.00, 1, 'TOEIC-2025-08-30');
+
+-- Thực thi stored procedure để tạo thanh toán cho các phiếu đăng ký cũ
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK001';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK002';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK003';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK004';
+
+-- Thực thi stored procedure để tạo thanh toán cho các phiếu đăng ký mới (chưa thanh toán)
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK005';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK006';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK007';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK008';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK009';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK010';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK011';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK012';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK013';
+EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK014';
+
+-- Dữ liệu bảng HoaDon (chỉ cho các phiếu đăng ký cũ)
+INSERT INTO HoaDon (ngayTao, ngayThanhToan, hinhThucThanhToan, thanhToanId, trangThai)
+VALUES 
+(GETDATE(), NULL, N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK001'), N'Chờ thanh toán'),
+(GETDATE(), GETDATE(), N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK002'), N'Đã thanh toán'),
+(GETDATE(), NULL, N'Tiền mặt', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK003'), N'Chờ thanh toán'),
+(GETDATE(), GETDATE(), N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK004'), N'Đã thanh toán');
+
+-- Cập nhật trạng thái thanh toán sau khi tạo hóa đơn
+UPDATE ThanhToan 
+SET trangThai = N'Đã lập hóa đơn' 
+WHERE thanhToanId IN (SELECT thanhToanId FROM HoaDon);
+
+-- Cập nhật trạng thái đã thanh toán cho phiếu đăng ký có hóa đơn đã thanh toán
+UPDATE PhieuDangKy 
+SET daThanhToan = 1 
+WHERE phieuDangKyId IN (
+    SELECT pdk.phieuDangKyId 
+    FROM PhieuDangKy pdk
+    JOIN ThanhToan tt ON pdk.phieuDangKyId = tt.phieuDangKyId
+    JOIN HoaDon hd ON tt.thanhToanId = hd.thanhToanId
+    WHERE hd.trangThai = N'Đã thanh toán'
+);

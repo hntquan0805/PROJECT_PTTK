@@ -1,12 +1,12 @@
 // New API Route for HoaDon History
 import { NextResponse } from "next/server"
-import { BillService } from "@/lib/services/bill.service"
+import { PhieuTTService } from "@/lib/services/phieu-thanh-toan.service"
 
-const billService = new BillService()
+const phieuTTService = new PhieuTTService()
 
 export async function GET() {
   try {
-    const paidInvoices = await billService.getPaidInvoices()
+    const paidInvoices = await phieuTTService.getPaidInvoices()
     return NextResponse.json(paidInvoices)
   } catch (error) {
     console.error("API error:", error)
