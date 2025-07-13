@@ -5,7 +5,7 @@ const config = {
   user: process.env.DB_USER || "sa",
   password: process.env.DB_PASSWORD || "*#Phuc123",
   server: process.env.DB_SERVER || "localhost",
-  database: process.env.DB_NAME || "ACCI10",
+  database: process.env.DB_NAME || "ACCI01",
   port: parseInt(process.env.DB_PORT || '1433'),
   options: {
     encrypt: true,

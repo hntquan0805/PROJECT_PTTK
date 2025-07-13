@@ -43,7 +43,7 @@ export class ThanhToanRepository {
         LEFT JOIN (
           SELECT 
             ctdk.phieuDangKyId,
-            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(gioBatDau) AS DATETIME)), 120) AS dueDate
+            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(thoiGianThi) AS DATETIME)), 120) AS dueDate
           FROM ChiTietDangKy ctdk
           INNER JOIN LichThi lt ON ctdk.lichThiId = lt.lichThiId
           WHERE ctdk.daChoXepLich = 1
@@ -94,7 +94,7 @@ export class ThanhToanRepository {
         LEFT JOIN (
           SELECT 
             ctdk.phieuDangKyId,
-            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(gioBatDau) AS DATETIME)), 120) AS dueDate
+            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(thoiGianThi) AS DATETIME)), 120) AS dueDate
           FROM ChiTietDangKy ctdk
           INNER JOIN LichThi lt ON ctdk.lichThiId = lt.lichThiId
           WHERE ctdk.daChoXepLich = 1
@@ -143,7 +143,7 @@ export class ThanhToanRepository {
         LEFT JOIN (
           SELECT 
             ctdk.phieuDangKyId,
-            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(gioBatDau) AS DATETIME)), 120) AS dueDate
+            CONVERT(varchar, (CAST(MIN(ngayThi) AS DATETIME) + CAST(MIN(thoiGianThi) AS DATETIME)), 120) AS dueDate
           FROM ChiTietDangKy ctdk
           INNER JOIN LichThi lt ON ctdk.lichThiId = lt.lichThiId
           WHERE ctdk.daChoXepLich = 1

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, User, Calendar, CreditCard, FileText, Mail, Phone } from "lucide-react"
+import BillPreview from "./bill-preview"
 
 export default function IndividualBillForm({ bill, onCancel, onSubmit, loading }) {
   const [formData, setFormData] = useState({
@@ -28,11 +29,18 @@ export default function IndividualBillForm({ bill, onCancel, onSubmit, loading }
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const [billCreated, setBillCreated] = useState(null)
 
   useEffect(() => {
     if (bill) {
       // Set ngày thanh toán mặc định là ngày hôm nay
-      const currentDate = new Date().toISOString().split('T')[0]
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      const currentDate = `${year}-${month}-${day}`;
+      
       setFormData({
         ...bill,
         paymentDate: currentDate
@@ -49,28 +57,59 @@ export default function IndividualBillForm({ bill, onCancel, onSubmit, loading }
     
     setIsSubmitting(true)
     try {
-      // Gọi API để tạo hóa đơn
-      const response = await fetch("/api/send-email", {
+      // Validate form
+      if (!formData.paymentMethod) {
+        alert("Vui lòng chọn phương thức thanh toán")
+        setIsSubmitting(false)
+        return
+      }
+      
+      // Gọi API để tạo hóa đơn và thanh toán
+      const response = await fetch("/api/thanh-toan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ billData: formData }),
+        body: JSON.stringify({ 
+          billData: formData,
+          isIndividual: true  // Đánh dấu là khách hàng cá nhân
+        }),
       })
 
       const result = await response.json()
       
       if (response.ok) {
-        alert(`Hóa đơn đã được tạo và gửi email thành công!`)
-        onSubmit(formData)
+        setBillCreated({
+          ...formData,
+          hoaDonId: result.hoaDonId
+        })
+        setShowPreview(true)
       } else {
-        alert(`Gửi email thất bại: ${result.error || "Unknown error"}`)
+        alert(`Lập hóa đơn thất bại: ${result.error || "Unknown error"}`)
       }
     } catch (error) {
       alert("Lỗi kết nối! Vui lòng thử lại.")
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleBackFromPreview = () => {
+    setShowPreview(false)
+  }
+
+  const handleComplete = () => {
+    onSubmit(formData)
+  }
+
+  if (showPreview && billCreated) {
+    return (
+      <BillPreview 
+        bill={billCreated} 
+        onComplete={handleComplete}
+        onBack={handleBackFromPreview}
+      />
+    )
   }
 
   return (

@@ -46,6 +46,41 @@ export class BillService {
     }
   }
 
+  async getHoaDonById(hoaDonId: number): Promise<HoaDonWithDetails | null> {
+    try {
+      return await this.hoaDonRepo.findById(hoaDonId)
+    } catch (error) {
+      console.error("Service error getting hoa don details:", error)
+      throw new Error("Failed to retrieve hoa don details")
+    }
+  }
+  
+  async deleteHoaDon(hoaDonId: number): Promise<void> {
+    try {
+      await this.hoaDonRepo.deleteHoaDon(hoaDonId)
+    } catch (error) {
+      console.error("Service error deleting hoa don:", error)
+      throw new Error("Failed to delete hoa don")
+    }
+  }
+  
+  async generateBillPDF(hoaDonId: number): Promise<string> {
+    try {
+      // Lấy thông tin hóa đơn
+      const hoaDon = await this.hoaDonRepo.findById(hoaDonId)
+      if (!hoaDon) {
+        throw new Error("Không tìm thấy hóa đơn")
+      }
+      
+      // Trong thực tế, bạn sẽ tạo file PDF và trả về đường dẫn
+      // Tạm thời trả về một thông báo thành công
+      return `Bill_${hoaDonId}_${Date.now()}.pdf`
+    } catch (error) {
+      console.error("Service error generating bill PDF:", error)
+      throw new Error("Failed to generate bill PDF")
+    }
+  }
+
   async getAllThanhToan(): Promise<ThanhToan[]> {
     try {
       return await this.thanhToanRepo.findAll()

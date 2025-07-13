@@ -1,9 +1,6 @@
 ﻿-- Dữ liệu mẫu cho hệ thống hóa đơn thanh toán
 
 -- Xóa dữ liệu cũ để tránh lỗi khóa chính
-DELETE FROM HoaDon;
-DELETE FROM ThanhToan;
-
 -- Dữ liệu bảng LoaiKiemTra
 INSERT INTO LoaiKiemTra (tenKiemTra, trangThai, donViChamThi, donViCapBang, giaHienTai, conToChuc)
 VALUES 
@@ -31,9 +28,6 @@ VALUES
 ('NV003', N'Lê Văn Cường', 'cuong.le@example.com', N'Hà Nội', '0923456789', N'Hành chính', N'Đang làm việc', 3);
 
 -- Dữ liệu bảng LichThi với thông tin chi tiết hơn
--- Xóa dữ liệu cũ
-DELETE FROM ChiTietDangKy;
-DELETE FROM LichThi;
 
 -- Thêm dữ liệu mới cho LichThi
 INSERT INTO LichThi (lichThiId, thoiGianThi, ngayThi, diaDiem, soThiSinhToiDa, soThiSinhDaDangKy, loaiKiemTraId)
@@ -99,18 +93,18 @@ VALUES
 -- Dữ liệu bảng PhieuDangKy
 INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, ghiChu, loaiChungChi, nhanVienId, khachHangId, loaiKiemTraId)
 VALUES 
-('PDK001', '2025-07-11', 0, 2, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS', N'IELTS', 'NV001', 'KH001', 1),
-('PDK002', '2025-07-11', 0, 5, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên', N'TOEIC', 'NV001', 'KH002', 2),
-('PDK003', '2025-07-12', 0, 10, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL cho sinh viên', N'TOEFL', 'NV001', 'KH003', 3),
+('PDK001', '2025-07-11', 0, 1, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS', N'IELTS', 'NV001', 'KH001', 1),
+('PDK002', '2025-07-11', 0, 15, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên', N'TOEIC', 'NV001', 'KH002', 2),
+('PDK003', '2025-07-12', 0, 20, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL cho sinh viên', N'TOEFL', 'NV001', 'KH003', 3),
 ('PDK004', '2025-07-12', 0, 1, 1, 0, '2025-08-20 14:00:00', N'Đăng ký thi MOS', N'MOS', 'NV001', 'KH004', 4),
-('PDK005', '2025-07-12', 0, 2, 1, 0, '2025-08-12 09:30:00', N'Đăng ký thi chứng chỉ Photoshop', N'Adobe Photoshop', 'NV001', 'KH005', 5),
-('PDK006', '2025-07-13', 0, 2, 1, 0, '2025-08-18 13:00:00', N'Đăng ký thi chứng chỉ Illustrator', N'Adobe Illustrator', 'NV001', 'KH006', 6),
-('PDK007', '2025-07-13', 0, 5, 1, 0, '2025-08-22 08:30:00', N'Đăng ký thi CCNA cho nhân viên IT', N'CCNA', 'NV001', 'KH007', 7),
-('PDK008', '2025-07-13', 0, 5, 1, 0, '2025-08-25 14:30:00', N'Đăng ký thi IC3 cho sinh viên', N'IC3', 'NV001', 'KH008', 8),
-('PDK009', '2025-07-13', 0, 3, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS đợt cuối năm', N'IELTS', 'NV002', 'KH006', 1),
-('PDK010', '2025-07-14', 0, 8, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên khối kỹ thuật', N'TOEIC', 'NV002', 'KH007', 2),
-('PDK011', '2025-07-14', 0, 12, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL đợt cuối năm', N'TOEFL', 'NV003', 'KH008', 3),
-('PDK012', '2025-07-14', 0, 15, 1, 0, '2025-08-20 14:00:00', N'Đăng ký thi MOS cho sinh viên khóa mới', N'MOS', 'NV003', 'KH008', 4);
+('PDK005', '2025-07-12', 0, 1, 1, 0, '2025-08-12 09:30:00', N'Đăng ký thi chứng chỉ Photoshop', N'Adobe Photoshop', 'NV001', 'KH005', 5),
+('PDK006', '2025-07-12', 0, 1, 1, 0, '2025-08-18 13:00:00', N'Đăng ký thi chứng chỉ Illustrator', N'Adobe Illustrator', 'NV001', 'KH006', 6),
+('PDK007', '2025-07-11', 0, 15, 1, 0, '2025-08-22 08:30:00', N'Đăng ký thi CCNA cho nhân viên IT', N'CCNA', 'NV001', 'KH007', 7),
+('PDK008', '2025-07-12', 0, 15, 1, 0, '2025-08-25 14:30:00', N'Đăng ký thi IC3 cho sinh viên', N'IC3', 'NV001', 'KH008', 8),
+('PDK009', '2025-07-11', 0, 1, 1, 0, '2025-08-05 08:00:00', N'Đăng ký thi IELTS đợt cuối năm', N'IELTS', 'NV002', 'KH006', 1),
+('PDK010', '2025-07-12', 0, 18, 1, 0, '2025-08-10 13:30:00', N'Đăng ký thi TOEIC cho nhân viên khối kỹ thuật', N'TOEIC', 'NV002', 'KH007', 2),
+('PDK011', '2025-07-11', 0, 22, 1, 0, '2025-08-15 09:00:00', N'Đăng ký thi TOEFL đợt cuối năm', N'TOEFL', 'NV003', 'KH008', 3),
+('PDK012', '2025-07-10', 0, 25, 1, 0, '2025-08-20 14:00:00', N'Đăng ký thi MOS cho sinh viên khóa mới', N'MOS', 'NV003', 'KH008', 4);
 
 -- Dữ liệu bảng ChiTietDangKy với thông tin thời gian chi tiết hơn
 INSERT INTO ChiTietDangKy (chiTietDangKyId, phieuDangKyId, thiSinhId, giaLucDangKy, daChoXepLich, lichThiId)
@@ -196,7 +190,7 @@ END;
 -- Tạo thêm một số phiếu đăng ký cho lịch thi sắp tới (chưa thanh toán)
 INSERT INTO PhieuDangKy (phieuDangKyId, ngayDangKy, daThanhToan, soLuongThiSinh, daDuyet, daHuy, thoiGianMongMuon, ghiChu, loaiChungChi, nhanVienId, khachHangId, loaiKiemTraId)
 VALUES 
-('PDK013', '2025-07-14', 0, 3, 1, 0, '2025-08-28 08:00:00', N'Đăng ký thi IELTS khóa mới', N'IELTS', 'NV001', 'KH005', 1),
+('PDK013', '2025-07-13', 0, 1, 1, 0, '2025-08-28 08:00:00', N'Đăng ký thi IELTS khóa mới', N'IELTS', 'NV001', 'KH005', 1),
 ('PDK014', '2025-07-14', 0, 10, 1, 0, '2025-08-30 13:30:00', N'Đăng ký thi TOEIC đợt 1/2025', N'TOEIC', 'NV002', 'KH002', 2);
 
 -- Thêm chi tiết đăng ký cho PDK013 (IELTS khóa mới)
@@ -219,45 +213,3 @@ VALUES
 ('CTDK069', 'PDK014', 'TS015', 1500000.00, 1, 'TOEIC-2025-08-30'),
 ('CTDK070', 'PDK014', 'TS016', 1500000.00, 1, 'TOEIC-2025-08-30'),
 ('CTDK071', 'PDK014', 'TS017', 1500000.00, 1, 'TOEIC-2025-08-30');
-
--- Thực thi stored procedure để tạo thanh toán cho các phiếu đăng ký cũ
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK001';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK002';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK003';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK004';
-
--- Thực thi stored procedure để tạo thanh toán cho các phiếu đăng ký mới (chưa thanh toán)
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK005';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK006';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK007';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK008';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK009';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK010';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK011';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK012';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK013';
-EXEC CalculatePaymentForRegistration @phieuDangKyId = 'PDK014';
-
--- Dữ liệu bảng HoaDon (chỉ cho các phiếu đăng ký cũ)
-INSERT INTO HoaDon (ngayTao, ngayThanhToan, hinhThucThanhToan, thanhToanId, trangThai)
-VALUES 
-(GETDATE(), NULL, N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK001'), N'Chờ thanh toán'),
-(GETDATE(), GETDATE(), N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK002'), N'Đã thanh toán'),
-(GETDATE(), NULL, N'Tiền mặt', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK003'), N'Chờ thanh toán'),
-(GETDATE(), GETDATE(), N'Chuyển khoản', (SELECT thanhToanId FROM ThanhToan WHERE phieuDangKyId = 'PDK004'), N'Đã thanh toán');
-
--- Cập nhật trạng thái thanh toán sau khi tạo hóa đơn
-UPDATE ThanhToan 
-SET trangThai = N'Đã lập hóa đơn' 
-WHERE thanhToanId IN (SELECT thanhToanId FROM HoaDon);
-
--- Cập nhật trạng thái đã thanh toán cho phiếu đăng ký có hóa đơn đã thanh toán
-UPDATE PhieuDangKy 
-SET daThanhToan = 1 
-WHERE phieuDangKyId IN (
-    SELECT pdk.phieuDangKyId 
-    FROM PhieuDangKy pdk
-    JOIN ThanhToan tt ON pdk.phieuDangKyId = tt.phieuDangKyId
-    JOIN HoaDon hd ON tt.thanhToanId = hd.thanhToanId
-    WHERE hd.trangThai = N'Đã thanh toán'
-);
