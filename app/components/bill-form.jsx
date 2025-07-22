@@ -34,7 +34,7 @@ export default function BillForm({ bill, onCancel, onSubmit, onSendEmail, loadin
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [troGiaOptions, setTroGiaOptions] = useState([])
-  const [selectedTroGia, setSelectedTroGia] = useState(null) // Holds the full selected TroGia object
+  const [selectedTroGia, setSelectedTroGia] = useState(null)
 
   useEffect(() => {
     const fetchTroGiaOptions = async () => {

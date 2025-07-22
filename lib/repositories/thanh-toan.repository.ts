@@ -30,6 +30,7 @@ export class ThanhToanRepository {
       const thanhToanId = `TT${Date.now()}`
       const troGiaId = thanhToan.troGiaId || null
       const phieuGiaHanId = thanhToan.phieuGiaHanId || null
+      const soTienGiamGia = thanhToan.soTienBanDau * thanhToan.soTienGiamGia /100
 
       await this.db.executeQuery(
         `
@@ -45,7 +46,7 @@ export class ThanhToanRepository {
           thanhToanId,
           thanhToan.soTienBanDau,
           thanhToan.hanThanhToan,
-          thanhToan.soTienGiamGia,
+          soTienGiamGia,
           thanhToan.tongSoTien,
           thanhToan.loaiThanhToan,
           thanhToan.trangThai,
